@@ -1,51 +1,69 @@
-use crate::token::Token;
+use crate::token::{self, Token};
 use std::str::Chars;
-use std::iter::Enumerate;
 
-fn peek(it: &Enumerate<Chars>) -> Option<(usize, char)> {
-    it.clone().next()
+// fn peek(it: &Chars) -> Option<char> {
+//     it.clone().next()
+// }
+
+
+fn get_next_token_kind(c: Option<char>) -> Option<token::Kind> {
+    match c {
+        None => Some(token::Kind::EOF),
+        Some(c) => {
+            match c {
+                ';' => Some(token::Kind::SemiColon),
+                '.' => Some(token::Kind::Dot),
+                '(' => Some(token::Kind::LeftParen),
+                ')' => Some(token::Kind::RightParen),
+                '"' => Some(token::Kind::DoubleQuote),
+                '\'' => Some(token::Kind::Quote),
+                _ => None
+            }
+        }
+    }
 }
-
 
 #[derive(Debug)]
 pub struct Lexer<'a> {
-    input: &'a str,
-    chars_enumerate: Enumerate<Chars<'a>>,
-    chars_offset: usize
+    // input: &'a str,
+    chars: Chars<'a>,
+    offset: usize
 }
 
 impl<'a> Lexer<'a> {
     pub fn new(input: &str) -> Lexer {
         Lexer {
-            input,
-            chars_enumerate: input.chars().enumerate(),
-            chars_offset: 0
+            // input,
+            chars: input.chars(),
+            offset: 0
         }
     }
 
-    pub fn get_next_token(&mut self) -> Token {
-        match self.chars_enumerate.next() {
-            None => {
-                Token {
-                    start: self.chars_offset,
-                    end: self.chars_offset,
-                    kind: crate::token::Kind::EOF
-                }
-            },
-            Some((idx, c)) => {
-                self.chars_offset = idx;
+    pub fn get_next_token(&mut self) -> token::Token {
+        let offset = self.offset;
 
-                println!("{}", c);
+        if let Some(kind) = get_next_token_kind(self.chars.next()) {
+            let next_offset = offset + 1;
 
-                Token {
-                    start: self.chars_offset,
-                    end: self.chars_offset,
-                    kind: crate::token::Kind::EOF
-                }                      
+            self.offset = next_offset;
+
+            Token {
+                start: offset,
+                end: next_offset,
+                kind
+            }
+        } else {
+            // TODO dummy implementation for now
+
+            let next_offset = offset + 1;
+
+            self.offset = next_offset;
+            Token {
+                start: offset,
+                end: next_offset,
+                kind: token::Kind::Unknown
             }
         }
     }
-
-    
 
 }

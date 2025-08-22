@@ -22,6 +22,13 @@ fn main() {
     println!("{:?}", lexer);
 
     println!("{:?}", lexer.get_next_token());
-    println!("{:?}", lexer.get_next_token());
+    loop {
+        let token = lexer.get_next_token();
+        println!("{:?}", token);
+
+        if token.kind == token::Kind::EOF {
+            break;
+        }
+    }
 
 }

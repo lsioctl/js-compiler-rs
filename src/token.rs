@@ -6,13 +6,18 @@ pub struct Token {
 
 
 }
-#[derive (Debug)]
+#[derive (Debug, PartialEq)]
 pub enum Kind {
+    Unknown,
+    Space,
+    SemiColon,
     Dot,
     EOF,
-    // LeftParen,
-    // RightParen,
-    // Quote,
-    // Identifier(String)
+    LeftParen,
+    RightParen,
+    Quote,
+    DoubleQuote,
+    // Identifier(String),
+    // StringLitteral(String)
 }
 
