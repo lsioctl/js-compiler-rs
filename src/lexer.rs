@@ -42,7 +42,9 @@ impl<'a> Lexer<'a> {
     pub fn get_next_token(&mut self) -> token::Token {
         let offset = self.offset;
 
-        if let Some(kind) = get_next_token_kind(self.chars.next()) {
+        let c = self.chars.next();
+
+        if let Some(kind) = get_next_token_kind(c) {
             let next_offset = offset + 1;
 
             self.offset = next_offset;
