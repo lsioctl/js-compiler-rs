@@ -1,4 +1,5 @@
 use crate::token::{self, Token};
+use std::iter::Peekable;
 use std::str::Chars;
 
 // fn peek(it: &Chars) -> Option<char> {
@@ -26,15 +27,15 @@ fn get_next_token_kind(c: Option<char>) -> Option<token::Kind> {
 #[derive(Debug)]
 pub struct Lexer<'a> {
     // input: &'a str,
-    chars: Chars<'a>,
+    chars: Peekable<Chars<'a>>,
     offset: usize
 }
 
 impl<'a> Lexer<'a> {
-    pub fn new(input: &str) -> Lexer {
+    pub fn new(input: &'a str) -> Lexer<'a> {
         Lexer {
             // input,
-            chars: input.chars(),
+            chars: input.chars().peekable(),
             offset: 0
         }
     }
@@ -43,6 +44,10 @@ impl<'a> Lexer<'a> {
         let offset = self.offset;
 
         let c = self.chars.next();
+
+        let mut is_in_string_litteral = false;
+
+        let mut string_litteral_buffer = String::new();
 
         if let Some(kind) = get_next_token_kind(c) {
             let next_offset = offset + 1;
@@ -55,6 +60,7 @@ impl<'a> Lexer<'a> {
                 kind
             }
         } else {
+            
             // TODO dummy implementation for now
 
             let next_offset = offset + 1;
