@@ -8,25 +8,14 @@ use std::fs;
 use crate::lexer::Lexer;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let file_path = &args[1];
-    let content = fs::read_to_string(file_path).expect("Should have been able to read the file");
+    
+    let input = "let x = 42;";
+    let mut lexer = Lexer::new(input);
 
-    //let token_list = token::tokenizer(&content);
-
-    //println!("{:?}", token_list);
-
-    let mut lexer = Lexer::new(&content);
-
-    // println!("position: {}, token:{:?}", lexer.position, tok)
-    println!("{:?}", lexer);
-
-    println!("{:?}", lexer.get_next_token());
     loop {
-        let token = lexer.get_next_token();
-        println!("{:?}", token);
-
-        if token.kind == token::Kind::EOF {
+        let token = lexer.next_token();
+        println!("{:?} at start: {:?} - end: {:?}", token.kind, token.start, token.end);
+        if token.kind ==lexer::TokenKind::EOF {
             break;
         }
     }
