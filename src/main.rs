@@ -1,6 +1,7 @@
 mod token;
 mod lexer;
 mod utils;
+mod mathparser;
 
 use std::env;
 use std::fs;
